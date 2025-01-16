@@ -3,14 +3,8 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
-from sklearn.model_selection import RandomizedSearchCV
-
-import xgboost as xgb
-from xgboost import XGBRegressor
 from tqdm import tqdm
-import math
 
 def make_data(seed_list, enz_a, enz_c, result_df):
     train_x_onehot_total = []
@@ -86,26 +80,8 @@ def make_data(seed_list, enz_a, enz_c, result_df):
     print('y_train : {}, y_test : {}'.format(len(y_train_onehot), len(y_test_onehot)))
     return train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total
 
-# create the grid search object
-def optimize_param(x,y, seed):
-    model = XGBRegressor(n_estimators = 100)
-    
-    grid = RandomizedSearchCV(
-        estimator=model, 
-        param_distributions=param_grid,
-        cv=5,
-        scoring= 'neg_mean_absolute_error',
-        n_jobs=-1,
-        n_iter= 1000,
-        random_state = seed)
-    grid.fit(x, y)
-    grid_results = pd.DataFrame(grid.cv_results_).sort_values('mean_test_score', ascending=False)
-    #print(-1*np.mean(grid_results['mean_test_score'][:ensemble_len]))
-    params_list = grid_results.params.iloc[0:ensemble_len,].tolist()
-    return params_list
-
 if __name__ == "__main__":
-    from Initialize_and_HAL_function import initialize_GS, HAL
+    from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
     enz_amount = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzamount.csv', sep = '\t')
     enz_comb = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzcomb.csv',sep = '\t')
     result = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/exp_result.csv')
@@ -131,19 +107,7 @@ if __name__ == "__main__":
 
     train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total = make_data([2,12,22,32,42,52,62,72,82,92], enz_amount, enz_comb, result)
 
-    ensemble_len = 20
-    # Create the grid search parameter and scoring functions
-    param_grid = {
-        "learning_rate": [0.01, 0.03, 0.1, 0.3],
-        "colsample_bytree": [0.6, 0.8, 0.9, 1.0],
-        "subsample": [0.6, 0.8, 0.9, 1.0],
-        "max_depth": [2, 3, 4, 6 ,8],
-        "objective": ['reg:absoluteerror'],
-        "reg_lambda": [1, 1.5, 2],
-        "gamma": [0, 0.1, 0.4, 0.6],
-        "min_child_weight": [1, 2, 4],
-        "random_state" : [42],
-        "nthread" : [2]}
+    num_iter = 1000
 
     init_num = 20
     sampling_num = 20
@@ -163,7 +127,7 @@ if __name__ == "__main__":
         round_num = 6
 
         HAL_v2_seed = []
-        param_list_GS = optimize_param(X_train_init_GS, y_train_init_GS, seed)
+        param_list_GS = optimize_param(X_train_init_GS, y_train_init_GS, seed, num_iter)
 
         for d in range(round_num):
             if d == 0 :
@@ -175,7 +139,7 @@ if __name__ == "__main__":
                 print('--------------------------------------------')
 
             else :
-                param_list_HAL_v2 = optimize_param(X_new_HAL_v2, y_new_HAL_v2, seed)
+                param_list_HAL_v2 = optimize_param(X_new_HAL_v2, y_new_HAL_v2, seed, num_iter)
                 print('HAL2 optim done!')
                 X_new_HAL_v2, y_new_HAL_v2, X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2, HAL_v2_mae = HAL(param_list_HAL_v2, d+1,X_new_HAL_v2, y_new_HAL_v2,
                                                                                                                    X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2,

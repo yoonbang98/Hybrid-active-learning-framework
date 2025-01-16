@@ -2,8 +2,41 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+from xgboost import XGBRegressor
+from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 import math
+
+ensemble_len = 20
+# Create the grid search parameter and scoring functions
+param_grid = {
+    "learning_rate": [0.01, 0.03, 0.1, 0.3],
+    "colsample_bytree": [0.6, 0.8, 0.9, 1.0],
+    "subsample": [0.6, 0.8, 0.9, 1.0],
+    "max_depth": [2, 3, 4, 6, 8],
+    "objective": ['reg:absoluteerror'],
+    "reg_lambda": [1, 1.5, 2],
+    "gamma": [0, 0.1, 0.4, 0.6],
+    "min_child_weight": [1, 2, 4],
+    "random_state": [42],
+    "nthread": [2]}
+
+def optimize_param(x, y, seed, num_iter):
+    model = XGBRegressor(n_estimators=100)
+
+    grid = RandomizedSearchCV(
+        estimator=model,
+        param_distributions=param_grid,
+        cv=5,
+        scoring='neg_mean_absolute_error',
+        n_jobs=-1,
+        n_iter=num_iter,
+        random_state=seed)
+    grid.fit(x, y)
+    grid_results = pd.DataFrame(grid.cv_results_).sort_values('mean_test_score', ascending=False)
+    # print(-1*np.mean(grid_results['mean_test_score'][:ensemble_len]))
+    params_list = grid_results.params.iloc[0:ensemble_len, ].tolist()
+    return params_list
 
 def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
     centroid = np.mean(scaled_X_train, axis=0)
