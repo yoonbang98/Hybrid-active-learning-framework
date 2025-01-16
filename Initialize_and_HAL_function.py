@@ -47,7 +47,9 @@ def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
     dist_df = pd.DataFrame([math.dist(i, centroid) for i in scaled_X_train], columns=['Dist'])
     idx = dist_df.sort_values(by='Dist', ascending=True).index.tolist()[0]
     Z_init_x.append(scaled_X_train[idx])
-    Z_init_y.append(np.array([y_train[idx]]))
+
+    Z_init_y.append(np.array([y_train[idx]]).reshape(-1,))
+
     init_idx_GS.append(idx)
 
     scaled_X_train_new_not_selected = pd.DataFrame(scaled_X_train).drop([idx], axis=0)
@@ -73,7 +75,7 @@ def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
         del original_idx[idx]
 
         Z_init_x.append(scaled_X_train_new_not_selected.iloc[idx].to_numpy())
-        Z_init_y.append(y_train_new_not_selected.iloc[idx].to_numpy())
+        Z_init_y.append(y_train_new_not_selected.iloc[idx].to_numpy().reshape(-1,))
 
         scaled_X_train_new_not_selected = scaled_X_train_new_not_selected.drop(idx, axis=0)
         y_train_new_not_selected = y_train_new_not_selected.drop(idx, axis=0)
