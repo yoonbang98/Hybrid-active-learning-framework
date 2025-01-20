@@ -3,10 +3,10 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from tqdm import tqdm
 
-def make_data(seed_list, enz_a, enz_c, result_df):
+def make_data(seed_list, enz_a, enz_c, result_df): # Preprocessing
     train_x_onehot_total = []
     test_x_onehot_total = []
     
@@ -24,14 +24,10 @@ def make_data(seed_list, enz_a, enz_c, result_df):
         train_label_tmp = result_df.drop(test_idx).reset_index(drop = True)
         train_enz_amount_tmp = enz_a.drop(test_idx).reset_index(drop = True)
         train_enz_comb_tmp = enz_c.drop(test_idx).reset_index(drop = True)
-        
-        train_2_idx = train_label_tmp['24_2'].loc[train_label_tmp['24_2'] != '-'].index.tolist() # 24_1, 24_2, 24_3을 하나로 합쳐 학습데이터를 만들려함  
-        #단, 같은 효소 종류, 농도 데이터가 학습데이터와 검증 데이터에 나뉘면 안된다고 판단하여 먼저 24_1 기준으로 학습데이터와 검증 데이터를 나누고 학습 데이터 증강   
-        train_3_idx = train_label_tmp['24_3'].loc[train_label_tmp['24_3'] != '-'].index.tolist()
-        
-        train_label = train_label_tmp['24']#pd.concat([train_label_tmp['24_1'],train_2_label,train_3_label],axis = 0) 
-        train_enz_amount = train_enz_amount_tmp #pd.concat([train_enz_amount_tmp,train_2_enz_amount, train_3_enz_amount],axis = 0)
-        train_enz_comb = train_enz_comb_tmp #pd.concat([train_enz_comb_tmp,train_2_enz_comb,train_3_enz_comb],axis = 0)
+
+        train_label = train_label_tmp['24']
+        train_enz_amount = train_enz_amount_tmp
+        train_enz_comb = train_enz_comb_tmp
         
         onehot_enc = OneHotEncoder(handle_unknown='ignore')
         a = onehot_enc.fit_transform(np.array(train_enz_comb['1']).reshape(-1,1))
@@ -77,13 +73,6 @@ if __name__ == "__main__":
     enz_amount = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzamount.csv', sep = '\t')
     enz_comb = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzcomb.csv',sep = '\t')
     result = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/exp_result.csv')
-
-    lycopene_data = pd.read_csv('/work/home/ybchae/active_learning/data/lycopene/Lycopene_data.csv')
-
-    lycopene_label = lycopene_data['a*(D65)']
-    lycopene_label = lycopene_label.apply(lambda x: max(0, x))
-
-    limonene_label = pd.read_csv('/work/home/ybchae/active_learning/processed_limonene_titer.csv')
 
     s1 = set(enz_amount.loc[enz_amount['1'] == 0].index.tolist())
     s2 = set(enz_amount.loc[enz_amount['2'] == 0].index.tolist())

@@ -3,12 +3,12 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 
-def make_data(seed_list, enz_a, enz_c, result_df):
+def make_data(seed_list, enz_a, enz_c, result): # Preprocessing
     train_x_onehot_total = []
     test_x_onehot_total = []
 
@@ -18,20 +18,20 @@ def make_data(seed_list, enz_a, enz_c, result_df):
     for s in seed_list:
         onehot_enc = OneHotEncoder(handle_unknown='ignore')
 
-        a = onehot_enc.fit_transform(np.array(enz_comb['1']).reshape(-1, 1))
-        b = onehot_enc.fit_transform(np.array(enz_comb['2']).reshape(-1, 1))
-        c = onehot_enc.fit_transform(np.array(enz_comb['3']).reshape(-1, 1))
-        d = onehot_enc.fit_transform(np.array(enz_comb['4']).reshape(-1, 1))
-        e = onehot_enc.fit_transform(np.array(enz_comb['5']).reshape(-1, 1))
-        f = onehot_enc.fit_transform(np.array(enz_comb['6']).reshape(-1, 1))
-        g = onehot_enc.fit_transform(np.array(enz_comb['7']).reshape(-1, 1))
-        h = onehot_enc.fit_transform(np.array(enz_comb['8']).reshape(-1, 1))
-        i = onehot_enc.fit_transform(np.array(enz_comb['9']).reshape(-1, 1))
+        a = onehot_enc.fit_transform(np.array(enz_c['1']).reshape(-1, 1))
+        b = onehot_enc.fit_transform(np.array(enz_c['2']).reshape(-1, 1))
+        c = onehot_enc.fit_transform(np.array(enz_c['3']).reshape(-1, 1))
+        d = onehot_enc.fit_transform(np.array(enz_c['4']).reshape(-1, 1))
+        e = onehot_enc.fit_transform(np.array(enz_c['5']).reshape(-1, 1))
+        f = onehot_enc.fit_transform(np.array(enz_c['6']).reshape(-1, 1))
+        g = onehot_enc.fit_transform(np.array(enz_c['7']).reshape(-1, 1))
+        h = onehot_enc.fit_transform(np.array(enz_c['8']).reshape(-1, 1))
+        i = onehot_enc.fit_transform(np.array(enz_c['9']).reshape(-1, 1))
 
         onehot_enz = np.concatenate((a.toarray(), b.toarray(), c.toarray(), d.toarray(), e.toarray(), f.toarray(),
                                      g.toarray(), h.toarray(), i.toarray()), axis=1)
 
-        X_onehot = np.concatenate((onehot_enz, np.array(enz_amount)), axis=1)
+        X_onehot = np.concatenate((onehot_enz, np.array(enz_a)), axis=1)
         X_train_onehot, X_test_onehot, y_train, y_test= train_test_split(X_onehot, np.array(result), test_size=0.2, random_state=s)
 
         scaler2 = MinMaxScaler()

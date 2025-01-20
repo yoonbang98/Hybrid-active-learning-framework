@@ -21,7 +21,7 @@ param_grid = {
     "random_state": [42],
     "nthread": [2]}
 
-def optimize_param(x, y, seed, num_iter):
+def optimize_param(x, y, seed, num_iter): # Hyperparameter tuning
     model = XGBRegressor(n_estimators=100)
 
     grid = RandomizedSearchCV(
@@ -34,11 +34,10 @@ def optimize_param(x, y, seed, num_iter):
         random_state=seed)
     grid.fit(x, y)
     grid_results = pd.DataFrame(grid.cv_results_).sort_values('mean_test_score', ascending=False)
-    # print(-1*np.mean(grid_results['mean_test_score'][:ensemble_len]))
     params_list = grid_results.params.iloc[0:ensemble_len, ].tolist()
     return params_list
 
-def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
+def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'): # Initialize using Greedy sampling
     centroid = np.mean(scaled_X_train, axis=0)
     Z_init_x = []
     Z_init_y = []
@@ -65,13 +64,10 @@ def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
         for i in range(scaled_X_train_new_not_selected.shape[0]):
             if mode == 'Euclidean':
                 d_nm = [math.dist(sample, scaled_X_train_new_not_selected.iloc[i]) for sample in Z_init_x]
-            # if mode == 'Cosine':
-            #     d_nm = [1 / cos_sim(sample, scaled_X_train_new_not_selected.iloc[i]) for sample in Z_init_x]
             d_n.append(np.min(d_nm))
         d_n_df = pd.DataFrame(d_n, columns=['Dist'])
         idx = d_n_df.sort_values(by='Dist', ascending=False).index.tolist()[0]
         init_idx_GS.append(original_idx[idx])
-        # print('Original idx : {}, idx : {}'.format(original_idx[idx], idx))
         del original_idx[idx]
 
         Z_init_x.append(scaled_X_train_new_not_selected.iloc[idx].to_numpy())
@@ -92,7 +88,7 @@ def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'):
 
 
 def HAL(p_list, day, X_selected, y_selected, X_not_selected, y_not_selected, scaled_X_test, y_test,
-        sampling_num, round_num):
+        sampling_num, round_num): # HAL function
     pred = []
     test_mae = []
     test_mse = []
@@ -103,7 +99,7 @@ def HAL(p_list, day, X_selected, y_selected, X_not_selected, y_not_selected, sca
     d_test = xgb.DMatrix(scaled_X_test, y_test)
     for param in p_list:
         param['device'] = 'cuda:1'
-        param['nthread'] = 4
+        #param['nthread'] = 4
         model = xgb.train(param, d_selected, num_boost_round=100)
 
         temp = model.predict(d_not_selected)
@@ -129,8 +125,8 @@ def HAL(p_list, day, X_selected, y_selected, X_not_selected, y_not_selected, sca
         y_not_selected = np.delete(y_not_selected, idx, axis=0)
         return X_selected, y_selected, X_not_selected, y_not_selected, (test_mae, test_mse, test_r2)
 
-    M_param = ((day) / round_num) / 2
-    M_I_param = 1 - M_param
+    M_param = ((day) / round_num) / 2 # Uncertainty ratio
+    M_I_param = 1 - M_param # Diversity ratio
     print(round(M_I_param, 3), round(M_param, 3))
 
     u_score = np.stack(pred).std(axis=0)
@@ -139,13 +135,10 @@ def HAL(p_list, day, X_selected, y_selected, X_not_selected, y_not_selected, sca
     for k in range(sampling_num):
         d_n = []
         for i in range(X_not_selected.shape[0]):
-            #if distance == 'Euclidean':
             d_nm = [math.dist(sample, X_not_selected[i]) for sample in X_selected]
-            #if distance == 'Cosine':
-            #    d_nm = [1 / cos_sim(sample, X_not_selected[i]) for sample in X_selected]
             d_n.append(np.min(d_nm))
         normalized_d_n = d_n / (np.max(d_n) + 1e-8)
-        d_n_df = pd.DataFrame(M_param * normalized_u_score + M_I_param * normalized_d_n, columns=['HAL_score'])
+        d_n_df = pd.DataFrame(M_param * normalized_u_score + M_I_param * normalized_d_n, columns=['HAL_score']) # HAL score calculation
         idx = d_n_df.sort_values(by='HAL_score', ascending=False).index.tolist()[0]
 
         X_selected = np.concatenate((X_selected, X_not_selected[idx].reshape(1, -1)), axis=0)
