@@ -1,5 +1,5 @@
 # Hybrid active learning strategy for optimizing experimental conditions in cell-free enzyme cascades 
-Here, we propose a Hybrid Active Learning (HAL) framework to minimize experimental trials in cell-free enzyme cascades. Our method maximizes the efficiency of AI model learning by utilizing a hybrid query strategy that combines distance-based and model prediction-based information to select experimental conditions most useful for learning.
+Here, we propose a **Hybrid Active Learning (HAL)** framework to minimize experimental trials in cell-free enzyme cascades. Our method maximizes the efficiency of AI model learning by utilizing a hybrid query strategy that combines distance-based and model prediction-based information to select experimental conditions most useful for learning.
 
 ## 1. Dataset
 
