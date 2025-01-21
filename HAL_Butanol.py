@@ -73,9 +73,9 @@ if __name__ == "__main__":
     from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
 
     path = os.getcwd()
-    enz_amount = pd.read_csv(path + '/data/iprobe/enzamount.csv', sep = '\t')
-    enz_comb = pd.read_csv(path + '/data/iprobe/enzcomb.csv',sep = '\t')
-    result = pd.read_csv(path + '/data/iprobe/exp_result.csv')
+    enz_amount = pd.read_csv(path + '/data/Butanol/enzamount.csv', sep = '\t')
+    enz_comb = pd.read_csv(path + '/data/Butanol/enzcomb.csv',sep = '\t')
+    result = pd.read_csv(path + '/data/Butanol/exp_result.csv')
 
     s1 = set(enz_amount.loc[enz_amount['1'] == 0].index.tolist())
     s2 = set(enz_amount.loc[enz_amount['2'] == 0].index.tolist())
