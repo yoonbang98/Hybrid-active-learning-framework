@@ -14,6 +14,9 @@ Here, we propose a **Hybrid Active Learning (HAL)** framework for optimizing exp
    - HAL_Butanol.py
    - HAL_Lycopene.py
    - HAL_Limonene.py
+3) Code for lycopene experiment
+   - Recommendation_function.py (Preprocessing, Hyperparameter tuning, METIS, HAL function)
+   - Lycopene_recommendation.py (METIS & HAL, Day 1 recommendation example)
 
 Instruction to use the source code:
 1) Download the code.
