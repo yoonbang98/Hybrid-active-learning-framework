@@ -55,9 +55,9 @@ if __name__ == "__main__":
     from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
 
     path = os.getcwd()
-    enz_amount = pd.read_csv(path + '/data/limonene/limonene_enz_amount.csv')
-    enz_comb = pd.read_csv(path + '/data/limonene/limonene_enz_comb.csv')
-    result = pd.read_csv(path + '/data/limonene/limonene_titer.csv')
+    enz_amount = pd.read_csv(path + '/data/Limonene/limonene_enz_amount.csv')
+    enz_comb = pd.read_csv(path + '/data/Limonene/limonene_enz_comb.csv')
+    result = pd.read_csv(path + '/data/Limonene/limonene_titer.csv')
 
     enz_amount = enz_amount.fillna(0)
     drop_idx = set()
