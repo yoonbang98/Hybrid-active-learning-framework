@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
     path = os.getcwd()
-    lycopene_data = pd.read_csv(path + '/data/lycopene/IPP_only_normalized_yb.csv',index_col=0)
+    lycopene_data = pd.read_csv(path + '/data/Lycopene/IPP_only_normalized_yb.csv',index_col=0)
     label = lycopene_data['result']
     lycopene_data.drop(columns=['result'], inplace=True)
     col_list = lycopene_data.columns.tolist()
