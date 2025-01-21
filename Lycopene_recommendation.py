@@ -7,7 +7,7 @@ if __name__ == "__main__":
         generate_all_possible_conditions, METIS_recommendation, HAL_recommendation
 
     path = os.getcwd()
-    lycopene_data = pd.read_csv(path + '/data/lycopene/IPP_only_normalized_yb.csv',
+    lycopene_data = pd.read_csv(path + '/data/Lycopene/IPP_only_normalized_yb.csv',
                                 index_col=0)
     label = lycopene_data['result']
     lycopene_data.drop(columns=['result'], inplace=True)
