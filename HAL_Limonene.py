@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
-from sklearn.model_selection import train_test_split
-from tqdm import tqdm
-
-
 def make_data(seed_list, enz_a, enz_c, result): # Preprocessing
     train_x_onehot_total = []
     test_x_onehot_total = []
@@ -52,11 +45,19 @@ def make_data(seed_list, enz_a, enz_c, result): # Preprocessing
 
 
 if __name__ == "__main__":
+    import os
+    import pandas as pd
+    import numpy as np
+    from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+    from sklearn.model_selection import train_test_split
+    from tqdm import tqdm
+
     from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
 
-    enz_amount = pd.read_csv('/work/home/ybchae/active_learning/data/limonene/limonene_enz_amount.csv')
-    enz_comb = pd.read_csv('/work/home/ybchae/active_learning/data/limonene/limonene_enz_comb.csv')
-    result = pd.read_csv('/work/home/ybchae/active_learning/data/limonene/limonene_titer.csv')
+    path = os.getcwd()
+    enz_amount = pd.read_csv(path + '/data/limonene/limonene_enz_amount.csv')
+    enz_comb = pd.read_csv(path + '/data/limonene/limonene_enz_comb.csv')
+    result = pd.read_csv(path + '/data/limonene/limonene_titer.csv')
 
     enz_amount = enz_amount.fillna(0)
     drop_idx = set()
@@ -71,7 +72,6 @@ if __name__ == "__main__":
     train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total = make_data([2,12,22,32,42, 52, 62, 72, 82, 92], enz_amount, enz_comb, result)
 
     num_iter = 200
-
     init_num = 30
     sampling_num = 30
     HAL_v2_total = []

@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-from tqdm import tqdm
-
-
 def make_data(seed_list, enz_df, result_df): # Preprocessing
     train_x_onehot_total = []
     test_x_onehot_total = []
@@ -40,10 +34,15 @@ def make_data(seed_list, enz_df, result_df): # Preprocessing
     return train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total
 
 if __name__ == "__main__":
-    from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
+    import os
+    import pandas as pd
+    import numpy as np
+    from sklearn.preprocessing import MinMaxScaler
+    from tqdm import tqdm
 
-    lycopene_data = pd.read_csv('/work/home/ybchae/active_learning/data/lycopene/IPP_only_normalized_yb.csv',
-                                index_col=0)
+    from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
+    path = os.getcwd()
+    lycopene_data = pd.read_csv(path + '/data/lycopene/IPP_only_normalized_yb.csv',index_col=0)
     label = lycopene_data['result']
     lycopene_data.drop(columns=['result'], inplace=True)
     col_list = lycopene_data.columns.tolist()
@@ -98,7 +97,6 @@ if __name__ == "__main__":
     train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total = make_data([12,22,32,42,52,62,72,82,92,102], lycopene_processed_onehot, label_processed)
 
     num_iter = 1000
-
     init_num = 20
     sampling_num = 10
     HAL_v2_total = []

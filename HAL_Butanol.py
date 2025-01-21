@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
-from tqdm import tqdm
-
 def make_data(seed_list, enz_a, enz_c, result_df): # Preprocessing
     train_x_onehot_total = []
     test_x_onehot_total = []
@@ -69,10 +64,18 @@ def make_data(seed_list, enz_a, enz_c, result_df): # Preprocessing
     return train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total
 
 if __name__ == "__main__":
+    import os
+    import pandas as pd
+    import numpy as np
+    from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+    from tqdm import tqdm
+
     from Initialize_and_HAL_function import initialize_GS, HAL, optimize_param
-    enz_amount = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzamount.csv', sep = '\t')
-    enz_comb = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/enzcomb.csv',sep = '\t')
-    result = pd.read_csv('/work/home/ybchae/active_learning/data/iprobe/exp_result.csv')
+
+    path = os.getcwd()
+    enz_amount = pd.read_csv(path + '/data/iprobe/enzamount.csv', sep = '\t')
+    enz_comb = pd.read_csv(path + '/data/iprobe/enzcomb.csv',sep = '\t')
+    result = pd.read_csv(path + '/data/iprobe/exp_result.csv')
 
     s1 = set(enz_amount.loc[enz_amount['1'] == 0].index.tolist())
     s2 = set(enz_amount.loc[enz_amount['2'] == 0].index.tolist())
@@ -89,7 +92,6 @@ if __name__ == "__main__":
     train_x_onehot_total, test_x_onehot_total, train_y_total, test_y_total = make_data([2,12,22,32,42,52,62,72,82,92], enz_amount, enz_comb, result)
 
     num_iter = 1000
-
     init_num = 20
     sampling_num = 20
     HAL_v2_total = []
@@ -122,8 +124,7 @@ if __name__ == "__main__":
             else :
                 param_list_HAL_v2 = optimize_param(X_new_HAL_v2, y_new_HAL_v2, seed, num_iter)
                 print('HAL2 optim done!')
-                X_new_HAL_v2, y_new_HAL_v2, X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2, HAL_v2_mae = HAL(param_list_HAL_v2, d+1,X_new_HAL_v2, y_new_HAL_v2,
-                                                                                                                   X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2,
+                X_new_HAL_v2, y_new_HAL_v2, X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2, HAL_v2_mae = HAL(param_list_HAL_v2, d+1,X_new_HAL_v2, y_new_HAL_v2,                                                                                                X_not_selected_new_HAL_v2, y_not_selected_new_HAL_v2,
                                                                                                                    scaled_X_test, y_test, sampling_num, round_num)
                 if len(HAL_v2_mae) > 0 :
                     HAL_v2_seed.append(HAL_v2_mae)

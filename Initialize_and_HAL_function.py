@@ -7,6 +7,7 @@ from sklearn.model_selection import RandomizedSearchCV
 import xgboost as xgb
 import math
 
+
 ensemble_len = 20
 # Create the grid search parameter and scoring functions
 param_grid = {
@@ -46,7 +47,6 @@ def initialize_GS(init_num, scaled_X_train, y_train, mode='Euclidean'): # Initia
     dist_df = pd.DataFrame([math.dist(i, centroid) for i in scaled_X_train], columns=['Dist'])
     idx = dist_df.sort_values(by='Dist', ascending=True).index.tolist()[0]
     Z_init_x.append(scaled_X_train[idx])
-
     Z_init_y.append(np.array([y_train[idx]]).reshape(-1,))
 
     init_idx_GS.append(idx)
