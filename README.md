@@ -9,25 +9,34 @@ Here, we propose a **Hybrid Active Learning (HAL)** framework for optimizing exp
 | **Lycopene** | **[Original Data]** This is unique data generated through experiments designed and conducted by the project team itself. |
 | **Limonene** | Q. Dudley *et al.* (2020). In vitro prototyping of limonene biosynthesis using cell-free protein synthesis. *Metabolic Engineering.* 61: 251–260. |
 
-## 2. Source code
-1) Code for hyperparameter tuning and HAL function
-   - Initialize_and_HAL_function.py
-2) Code for training each dataset
-   - HAL_Butanol.py
-   - HAL_Lycopene.py
-   - HAL_Limonene.py
-3) Code for lycopene experiment
-   - Recommendation_function.py (Preprocessing, Hyperparameter tuning, METIS, HAL function)
-   - Lycopene_recommendation.py (METIS & HAL, Day 1 recommendation example)
+## 2. Source Code
 
-Instruction to use the source code:
-1) Download the code.
-2) Make sure you are in the main directory where the code is.
+The source code is categorized into three main parts based on its function:
 
-## 3. Library
-1) python==3.11.5
-2) numpy==1.26.3
-3) pandas==1.5.3
-4) xgboost==2.0.3
-5) sklearn==1.4.0
-6) tqdm==4.66.1
+* **Core HAL Framework**
+  * `Initialize_and_HAL_function.py` : Code for hyperparameter tuning and the main HAL function.
+* **Dataset Training**
+  * `HAL_Butanol.py` : Training script for the Butanol dataset.
+  * `HAL_Lycopene.py` : Training script for the Lycopene dataset.
+  * `HAL_Limonene.py` : Training script for the Limonene dataset.
+* **Lycopene Experiment Application**
+  * `Recommendation_function.py` : Contains functions for preprocessing, hyperparameter tuning, METIS, and HAL.
+  * `Lycopene_recommendation.py` : Example script for Day 1 recommendations using METIS & HAL.
+
+## 3. Getting Started
+
+**Instructions to use the source code:**
+1. Download or clone this repository.
+2. Open your terminal and ensure you are in the main directory containing the downloaded code.
+3. Run the desired scripts from this root directory.
+
+## 4. Requirements
+
+The project requires **Python 3.11.5**. The following libraries are required to run the code:
+
+```text
+numpy==1.26.3
+pandas==1.5.3
+xgboost==2.0.3
+scikit-learn==1.4.0
+tqdm==4.66.1
