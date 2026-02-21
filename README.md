@@ -3,9 +3,9 @@ Here, we propose a **Hybrid Active Learning (HAL)** framework for optimizing exp
 
 ## 1. Dataset
 
-1) Butanol
-2) Lycopene
-3) Limonene
+1) Butanol - A. S. Karim, Q. M. Dudley, A. Juminaga, Y. B. Yuan, S. A. Crowe, J. T. Heggestad, S. Garg, T. Abdalla, W. S. Grubbe, B. J. Rasor, D. N. Coar, M. Torculas, M. Krein, F. Liew, A. Quattlebaum, R. O. Jensen, J. A. Stuart, S. D. Simpson, M. Köpke and M. C. Jewett (2020) In vitro prototyping and rapid optimization of biosynthetic enzymes for cell design. Nat Chem Biol. 16: 912-+.
+2) Lycopene - This is unique data generated through experiments designed and conducted by the project team itself.
+3) Limonene - Q. Dudley, A. Karim, C. Nash, M. Jewett (2020) In vitro prototyping of limonene biosynthesis using cell-free protein synthesis. Metabolic Engineering. 61: 251–260.
 
 ## 2. Source code
 1) Code for hyperparameter tuning and HAL function
