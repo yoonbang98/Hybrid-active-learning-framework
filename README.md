@@ -15,6 +15,8 @@ The source code is categorized into three main parts based on its function:
 
 * **Core HAL Framework**
   * `Initialize_and_HAL_function.py` : Code for hyperparameter tuning and the main HAL function.
+* **Google colab implementation of HAL Framework for lycopene**
+  * `HAL_example_Lycopene.ipynb` : Active learning simulation for lycopene production using Hybrid Active Learning.
 * **Dataset Training**
   * `HAL_Butanol.py` : Training script for the Butanol dataset.
   * `HAL_Lycopene.py` : Training script for the Lycopene dataset.
